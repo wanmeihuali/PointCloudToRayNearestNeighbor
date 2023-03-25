@@ -181,6 +181,17 @@ class PointCloudToRayNearestNeighbor:
         self.config = config
 
     def __call__(self, pointcloud: torch.Tensor, T_camera_pointcloud: torch.Tensor) -> RenderResult:
+        """ Given a point cloud and a camera, for rays corresponding to each pixel in the camera image, find the
+        points in the point cloud that are near enough to the ray. The points are sorted by depth.
+
+        Args:
+            pointcloud (torch.Tensor): (N, 3) tensor, the point cloud, where N is the number of points, and each point is represented by a 3D vector (x, y, z)
+            T_camera_pointcloud (torch.Tensor): (4, 4) tensor, the transformation matrix from the point cloud coordinate system to the camera coordinate system,
+            the camera coordinate system is defined as follows: the origin is the camera center, the x axis points to the right, the y axis points down, and the z axis points forward
+
+        Returns:
+            RenderResult: see the definition of RenderResult for details
+        """
         assert pointcloud.dim() == 2 and pointcloud.shape[1] == 3, "pointcloud must be a 2D tensor with shape (N, 3)"
         background_id = pointcloud.shape[0]
         num_of_points = pointcloud.shape[0]
